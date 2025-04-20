@@ -26,20 +26,7 @@ function generateCharacter() {
   const age = document.getElementById("charAge").value || "??";
   const gender = getRandomOption("charGender");
   const location = getRandomOption("charLocation");
-  const birthplace = getRandomOption("charBirthplace");
-  
-  const attrNames = {
-    STR: "力量 STR",
-    CON: "體質 CON",
-    SIZ: "體型 SIZ",
-    DEX: "敏捷 DEX",
-    APP: "外貌 APP",
-    INT: "智力 INT",
-    POW: "意志 POW",
-    EDU: "教育 EDU",
-    LUCK: "幸運 LUCK"
-  };
-  
+  const birthplace = getRandomOption("charBirthplace")
   // 建立屬性值
   const attributes = {
     STR: rollDice(3, 6, 0, 5),
