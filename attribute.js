@@ -35,15 +35,19 @@ function validateAgeInput(ageInput) {
 }
 
 // 加權隨機年齡（減少極端值）
+//非線性隨機年齡
 function getWeightedRandomAge() {
-  const weighted = [];
-  for (let i = 15; i <= 90; i++) {
-    const weight = i <= 30 ? 3 : i <= 60 ? 2 : 1;
-    for (let j = 0; j < weight; j++) weighted.push(i);
-  }
-  return weighted[Math.floor(Math.random() * weighted.length)];
+  const pool = [
+    ...Array(10).fill().map(() => getRandomBetween(20, 30)),
+    ...Array(7).fill().map(() => getRandomBetween(31, 39)),
+    ...Array(5).fill().map(() => getRandomBetween(15, 19)),
+    ...Array(4).fill().map(() => getRandomBetween(40, 49)),
+    ...Array(3).fill().map(() => getRandomBetween(50, 59)),
+    ...Array(2).fill().map(() => getRandomBetween(60, 69)),
+    ...Array(1).fill().map(() => getRandomBetween(70, 89)),
+  ];
+  return pool[Math.floor(Math.random() * pool.length)];
 }
-
 // 教育增強檢定
 function applyEduCheck(currentEdu, times) {
   let result = currentEdu;
