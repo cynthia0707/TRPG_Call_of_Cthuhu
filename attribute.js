@@ -98,17 +98,7 @@ const age = ageInput ? parseInt(ageInput) : getWeightedRandomAge();
   const birthplace = getRandomOption("charBirthplace")
   const era = document.getElementById("charEra").value || "1920";
   
-  const errorNotNumber = document.getElementById("ageErrorNotNumber");
-  const errorOutOfRange = document.getElementById("ageErrorOutOfRange");
-  // 清除所有錯誤提示
-  errorNotNumber.classList.add("d-none");
-  errorOutOfRange.classList.add("d-none");
-
-  // 1. 如果有輸入，但不是數字
-  if (ageInput && isNaN(Number(ageInput))) {
-    errorNotNumber.classList.remove("d-none");
-    return;
-  }
+  
 
   const age = ageInput ? parseInt(ageInput) : getWeightedRandomAge();
 
