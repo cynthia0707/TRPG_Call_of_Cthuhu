@@ -22,8 +22,8 @@ function getRandomOption(selectId) {
 
 // ✅ 主要功能：產生角色並跳轉
 function generateCharacter() {
-  const name = document.getElementById("charName").value || "無名角色";
-  const age = document.getElementById("charAge").value || "??";
+  const name = document.getElementById("charName").value || "無名氏";
+  const age = document.getElementById("charAge").value || "年齡未知的古神";
   const gender = getRandomOption("charGender");
   const location = getRandomOption("charLocation");
   const birthplace = getRandomOption("charBirthplace")
