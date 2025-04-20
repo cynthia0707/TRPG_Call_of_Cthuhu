@@ -1,89 +1,35 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>角色卡產生器</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>首頁 - TRPG 工具箱</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-light">
+<body>
+  <!-- ✅ Navbar 區塊 -->
+  <div id="navbar-placeholder">載入選單中...</div>
 
+  <!-- ✅ 內容 -->
   <div class="container py-5">
-    <h1 class="text-center mb-4">COC 角色卡產生器</h1>
-
-    <form id="charForm">
-      <div class="mb-3">
-        <label for="charName" class="form-label">角色名稱</label>
-        <input type="text" class="form-control" id="charName" placeholder="輸入名字">
-      </div>
-
-      <div class="mb-3">
-        <label for="charAge" class="form-label">年齡</label>
-        <input type="text" class="form-control" id="charAge" placeholder="輸入年齡">
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">性別</label>
-        <select class="form-select" id="charGender">
-          <option>隨機</option>
-          <option>男</option>
-          <option>女</option>
-          <option>?</option>
-        </select>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">年代</label>
-        <select class="form-select" id="charEra">
-          <option value="1920">1920(默認)</option>
-          <option value="現代">現代</option>
-        </select>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">居住地</label>
-        <select class="form-select" id="charLocation">
-          <option>隨機</option>
-          <option>美國</option>
-          <option>英國</option>
-          <option>法國</option>
-          <option>德國</option>
-          <option>義大利</option>
-          <option>中國</option>
-          <option>日本</option>
-          <option>韓國</option>
-          <option>印度</option>
-          <option>西班牙</option>
-          <option>俄羅斯</option>
-        </select>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">出身地</label>
-        <select class="form-select" id="charBirthplace">
-          <option>隨機</option>
-          <option>美國</option>
-          <option>英國</option>
-          <option>法國</option>
-          <option>德國</option>
-          <option>義大利</option>
-          <option>中國</option>
-          <option>日本</option>
-          <option>韓國</option>
-          <option>印度</option>
-          <option>西班牙</option>
-          <option>俄羅斯</option>
-        </select>
-      </div>
-
-      <button type="button" class="btn btn-primary" onclick="generateCharacter()">產生角色</button>
-    </form>
-
-    <!-- 屬性顯示 -->
-    <div id="attributes" class="mt-4 text-center fw-bold"></div>
-
+    <h1 class="text-center">歡迎來到 TRPG 工具箱</h1>
+    <p class="lead text-center mt-3">這裡是你建立角色、擲骰子、管理卡牌的好幫手！</p>
   </div>
 
-  <!-- Bootstrap JS -->
+  <!-- ✅ Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="js.js"></script>
+
+  <!-- ✅ 載入 navbar（用另一個 script） -->
+  <script>
+    fetch("components/navbar.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("navbar-placeholder").innerHTML = data;
+      });
+  </script>
 </body>
 </html>
+
