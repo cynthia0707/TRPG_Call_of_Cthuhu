@@ -56,3 +56,4 @@ function generateCharacter() {
   // ✅ 跳轉到結果頁（你自己命名叫 character.html）
   window.location.href = "character.html";
 }
+//珍愛生命，遠離程式語言
