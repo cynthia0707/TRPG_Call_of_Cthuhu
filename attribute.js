@@ -157,3 +157,4 @@ function generateCharacter() {
   localStorage.setItem("characterData", JSON.stringify(character));
   window.location.href = "character.html";
 }
+//珍愛生命，遠離程式...KP008關心您
