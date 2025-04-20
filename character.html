@@ -39,6 +39,17 @@
   const data = JSON.parse(localStorage.getItem("characterData"));
   const table = document.getElementById("abilityTable");
   const basic = document.getElementById("basicInfo");
+  const attrNames = {
+  STR: "力量 STR",
+  CON: "體質 CON",
+  SIZ: "體型 SIZ",
+  DEX: "敏捷 DEX",
+  APP: "外貌 APP",
+  INT: "智力 INT",
+  POW: "意志 POW",
+  EDU: "教育 EDU",
+  LUCK: "幸運 LUCK"
+};
 
   if (data && data.attributes) {
     // 顯示基本資料
