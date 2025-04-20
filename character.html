@@ -63,10 +63,11 @@
 
     // 顯示能力值
     for (const [attr, value] of Object.entries(data.attributes)) {
-      const row = document.createElement("tr");
-      row.innerHTML = `<td>${attr}</td><td>${value}</td>`;
-      table.appendChild(row);
-    }
+  const row = document.createElement("tr");
+  row.innerHTML = `<td>${attrNames[attr] || attr}</td><td>${value}</td>`;
+  table.appendChild(row);
+}
+
   } else {
     table.innerHTML = `<tr><td colspan="2">找不到角色資料，請回首頁產生角色。</td></tr>`;
   }
