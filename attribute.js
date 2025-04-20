@@ -97,6 +97,28 @@ const age = ageInput ? parseInt(ageInput) : getWeightedRandomAge();
   const location = getRandomOption("charLocation");
   const birthplace = getRandomOption("charBirthplace")
   const era = document.getElementById("charEra").value || "1920";
+  
+  const errorNotNumber = document.getElementById("ageErrorNotNumber");
+  const errorOutOfRange = document.getElementById("ageErrorOutOfRange");
+  // 清除所有錯誤提示
+  errorNotNumber.classList.add("d-none");
+  errorOutOfRange.classList.add("d-none");
+
+  // 1. 如果有輸入，但不是數字
+  if (ageInput && isNaN(Number(ageInput))) {
+    errorNotNumber.classList.remove("d-none");
+    return;
+  }
+
+  const age = ageInput ? parseInt(ageInput) : getWeightedRandomAge();
+
+  // 2. 如果輸入數字，但不在 15~90
+  if (ageInput && (age < 15 || age > 90)) {
+    errorOutOfRange.classList.remove("d-none");
+    return;
+  }
+
+  // ...（接著繼續生成角色）
   // 建立屬性值
   const attributes = {
     STR: rollDice(3, 6, 0, 5),
