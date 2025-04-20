@@ -1,24 +1,41 @@
 <!doctype html>
-<html>
+<html lang="zh-Hant">
 <head>
-<meta charset="utf-8">
-<title>dice</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>骰子機器人</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css"> <!-- 如有樣式可加 -->
 </head>
 
 <body>
-    <div id="navbar-placeholder"></div>
-  
-    <div class="container py-5">
+  <!-- ✅ 導覽列 -->
+  <div id="navbar-placeholder"></div>
+
+  <!-- ✅ 主內容 -->
+  <div class="container py-5">
     <h1 class="text-center mb-4">骰子機器人</h1>
-    <script>
-        // 載入 navbar.html
-        fetch("components/navbar.html")
-          .then(res => res.text())
-          .then(data => {
-            document.getElementById("navbar-placeholder").innerHTML = data;
-          });
-      </script>
-      <script src="dice.js"></script>      <!-- 在擲骰子頁用 -->
+
+    <!-- 🚧 將來的骰子功能按鈕、結果顯示放這裡 -->
+    <div id="dice-area" class="text-center">
+      <p>這裡是擲骰區，功能待開發… 🎲</p>
+    </div>
+  </div>
+
+  <!-- ✅ Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- ✅ 載入 navbar（共用） -->
+  <script>
+    fetch("../components/navbar.html")  // ❗注意 dice.html 如果在 /dice/ 資料夾，就要往上找
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("navbar-placeholder").innerHTML = data;
+      });
+  </script>
+
+  <!-- ✅ Dice 功能 JS -->
+  <script src="dice.js"></script>
 </body>
 </html>
+
