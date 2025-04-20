@@ -94,6 +94,7 @@ function generateCharacter() {
   const ageInput = document.getElementById("charAge").value;
 const age = ageInput ? parseInt(ageInput) : getWeightedRandomAge();
   const gender = getRandomOption("charGender");
+  const era = getRandomOption("charEra");
   const location = getRandomOption("charLocation");
   const birthplace = getRandomOption("charBirthplace")
   // 建立屬性值
@@ -114,6 +115,7 @@ const age = ageInput ? parseInt(ageInput) : getWeightedRandomAge();
     name,
     age,
     gender,
+    era,
     location,
     birthplace,
     attributes
