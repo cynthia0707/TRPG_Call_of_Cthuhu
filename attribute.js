@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 
 // 通用骰子函式
 function rollDice(times, sides, bonus = 0, multiplier = 1) {
@@ -8,76 +7,8 @@ function rollDice(times, sides, bonus = 0, multiplier = 1) {
   }
   return (total + bonus) * multiplier;
 }
-//非線性隨機年齡
-function getWeightedRandomAge() {
-  const pool = [
-    ...Array(10).fill().map(() => getRandomBetween(20, 30)),
-    ...Array(7).fill().map(() => getRandomBetween(31, 39)),
-    ...Array(5).fill().map(() => getRandomBetween(15, 19)),
-    ...Array(4).fill().map(() => getRandomBetween(40, 49)),
-    ...Array(3).fill().map(() => getRandomBetween(50, 59)),
-    ...Array(2).fill().map(() => getRandomBetween(60, 69)),
-    ...Array(1).fill().map(() => getRandomBetween(70, 89)),
-  ];
-  return pool[Math.floor(Math.random() * pool.length)];
-  //年齡調整
-}
-function applyAgeAdjustment(character) {
-  const age = parseInt(character.age);
-  const attr = character.attributes;
-  let eduTests = 0;
 
-  if (age >= 15 && age <= 19) {
-    reduceRandomTotal(["STR", "SIZ"], 5, attr);
-    attr.EDU -= 5;
-    attr.LUCK = Math.max(
-      rollDice(3, 6, 0, 5),
-      rollDice(3, 6, 0, 5)
-    );
-  } else if (age <= 39) {
-    eduTests = 1;
-  } else if (age <= 49) {
-    eduTests = 2;
-    reduceRandomTotal(["STR", "CON", "DEX"], 5, attr);
-    attr.APP -= 5;
-  } else if (age <= 59) {
-    eduTests = 3;
-    reduceRandomTotal(["STR", "CON", "DEX"], 10, attr);
-    attr.APP -= 10;
-  } else if (age <= 69) {
-    eduTests = 4;
-    reduceRandomTotal(["STR", "CON", "DEX"], 20, attr);
-    attr.APP -= 15;
-  } else if (age <= 79) {
-    eduTests = 4;
-    reduceRandomTotal(["STR", "CON", "DEX"], 40, attr);
-    attr.APP -= 20;
-  } else if (age <= 89) {
-    eduTests = 4;
-    reduceRandomTotal(["STR", "CON", "DEX"], 80, attr);
-    attr.APP -= 25;
-  }
-
-  // 教育增強檢定
-  for (let i = 0; i < eduTests; i++) {
-    const roll = Math.floor(Math.random() * 100) + 1;
-    if (roll > attr.EDU) {
-      attr.EDU += Math.floor(Math.random() * 10) + 1;
-      attr.EDU = Math.min(attr.EDU, 99);
-    }
-  }
-
-  // 最低值為 1，避免為負
-  for (const key in attr) {
-    if (attr[key] < 1) attr[key] = 1;
-  }
-}
-
-function getRandomBetween(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-// 處理「隨機」選項
+// 隨機選擇選項
 function getRandomOption(selectId) {
   const select = document.getElementById(selectId);
   if (select.value === "隨機") {
@@ -88,28 +19,113 @@ function getRandomOption(selectId) {
   return select.value;
 }
 
-// ✅ 主要功能：產生角色並跳轉
+// 年齡輸入驗證
+function validateAgeInput(ageInput) {
+  if (!ageInput) return null; // 空值 → 用隨機
+  const age = parseInt(ageInput, 10);
+  if (isNaN(age)) {
+    alert("請輸入數字格式的年齡（例如 25）");
+    return null;
+  }
+  if (age < 15 || age > 90) {
+    alert("年齡請輸入 15 到 90 之間的數字");
+    return null;
+  }
+  return age;
+}
+
+// 加權隨機年齡（減少極端值）
+function getWeightedRandomAge() {
+  const weighted = [];
+  for (let i = 15; i <= 90; i++) {
+    const weight = i <= 30 ? 3 : i <= 60 ? 2 : 1;
+    for (let j = 0; j < weight; j++) weighted.push(i);
+  }
+  return weighted[Math.floor(Math.random() * weighted.length)];
+}
+
+// 教育增強檢定
+function applyEduCheck(currentEdu, times) {
+  let result = currentEdu;
+  for (let i = 0; i < times; i++) {
+    const check = rollDice(1, 100);
+    if (check > result) {
+      result += rollDice(1, 10);
+      if (result > 99) result = 99;
+    }
+  }
+  return result;
+}
+
+// 年齡調整處理
+function applyAgeAdjustment(character) {
+  const age = character.age;
+  const attr = character.attributes;
+
+  if (age < 20) {
+    attr.EDU -= 5;
+    let total = attr.STR + attr.SIZ;
+    if (total > 5) {
+      if (attr.STR >= 3) attr.STR -= 3;
+      else attr.STR = Math.max(1, attr.STR - 2);
+      attr.SIZ = Math.max(1, attr.SIZ - (5 - (attr.STR || 0)));
+    }
+    const luck1 = rollDice(3, 6, 0, 5);
+    const luck2 = rollDice(3, 6, 0, 5);
+    attr.LUCK = Math.max(luck1, luck2);
+  } else if (age < 40) {
+    attr.EDU = applyEduCheck(attr.EDU, 1);
+  } else if (age < 50) {
+    attr.EDU = applyEduCheck(attr.EDU, 2);
+    const loss = 5;
+    attr.STR -= 2;
+    attr.CON -= 2;
+    attr.DEX -= 1;
+    attr.APP -= 5;
+  } else if (age < 60) {
+    attr.EDU = applyEduCheck(attr.EDU, 3);
+    attr.STR -= 4;
+    attr.CON -= 3;
+    attr.DEX -= 3;
+    attr.APP -= 10;
+  } else if (age < 70) {
+    attr.EDU = applyEduCheck(attr.EDU, 4);
+    attr.STR -= 7;
+    attr.CON -= 7;
+    attr.DEX -= 6;
+    attr.APP -= 15;
+  } else if (age < 80) {
+    attr.EDU = applyEduCheck(attr.EDU, 4);
+    attr.STR -= 15;
+    attr.CON -= 15;
+    attr.DEX -= 10;
+    attr.APP -= 20;
+  } else {
+    attr.EDU = applyEduCheck(attr.EDU, 4);
+    attr.STR -= 40;
+    attr.CON -= 30;
+    attr.DEX -= 10;
+    attr.APP -= 25;
+  }
+
+  // 不讓屬性變負數
+  for (let key in attr) {
+    if (attr[key] < 0) attr[key] = 0;
+  }
+}
+
+// 主要功能：產生角色並跳轉
 function generateCharacter() {
   const name = document.getElementById("charName").value || "無名氏";
   const ageInput = document.getElementById("charAge").value;
-const age = ageInput ? parseInt(ageInput) : getWeightedRandomAge();
+  let age = validateAgeInput(ageInput);
+  if (age === null) age = getWeightedRandomAge();
+
   const gender = getRandomOption("charGender");
   const location = getRandomOption("charLocation");
-  const birthplace = getRandomOption("charBirthplace")
+  const birthplace = getRandomOption("charBirthplace");
   const era = document.getElementById("charEra").value || "1920";
-  
-  
 
-  const age = ageInput ? parseInt(ageInput) : getWeightedRandomAge();
-
-  // 2. 如果輸入數字，但不在 15~90
-  if (ageInput && (age < 15 || age > 90)) {
-    errorOutOfRange.classList.remove("d-none");
-    return;
-  }
-
-  // ...（接著繼續生成角色）
-  // 建立屬性值
   const attributes = {
     STR: rollDice(3, 6, 0, 5),
     CON: rollDice(3, 6, 0, 5),
@@ -122,7 +138,6 @@ const age = ageInput ? parseInt(ageInput) : getWeightedRandomAge();
     LUCK: rollDice(3, 6, 0, 5)
   };
 
-  // 建立角色物件
   const character = {
     name,
     age,
@@ -133,12 +148,8 @@ const age = ageInput ? parseInt(ageInput) : getWeightedRandomAge();
     attributes
   };
 
-applyAgeAdjustment(character);
+  applyAgeAdjustment(character);
 
-// 然後儲存資料
-localStorage.setItem("characterData", JSON.stringify(character));
-
-  // ✅ 跳轉到結果頁
+  localStorage.setItem("characterData", JSON.stringify(character));
   window.location.href = "character.html";
 }
-//珍愛生命，遠離程式語言
