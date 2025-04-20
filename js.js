@@ -94,9 +94,9 @@ function generateCharacter() {
   const ageInput = document.getElementById("charAge").value;
 const age = ageInput ? parseInt(ageInput) : getWeightedRandomAge();
   const gender = getRandomOption("charGender");
-  const era = getRandomOption("charEra").value || "1920";
   const location = getRandomOption("charLocation");
   const birthplace = getRandomOption("charBirthplace")
+  const era = document.getElementById("charEra").value || "1920";
   // 建立屬性值
   const attributes = {
     STR: rollDice(3, 6, 0, 5),
@@ -115,9 +115,9 @@ const age = ageInput ? parseInt(ageInput) : getWeightedRandomAge();
     name,
     age,
     gender,
-    era,
     location,
     birthplace,
+    era,
     attributes
   };
 
