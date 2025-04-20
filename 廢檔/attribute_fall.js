@@ -97,9 +97,6 @@ const age = ageInput ? parseInt(ageInput) : getWeightedRandomAge();
   const location = getRandomOption("charLocation");
   const birthplace = getRandomOption("charBirthplace")
   const era = document.getElementById("charEra").value || "1920";
-  
-  
-
   const age = ageInput ? parseInt(ageInput) : getWeightedRandomAge();
 
   // 2. 如果輸入數字，但不在 15~90
