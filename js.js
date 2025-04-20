@@ -119,8 +119,10 @@ const age = ageInput ? parseInt(ageInput) : getWeightedRandomAge();
     attributes
   };
 
-  // 儲存角色到 localStorage
-  localStorage.setItem("characterData", JSON.stringify(character));
+applyAgeAdjustment(character);
+
+// 然後儲存資料
+localStorage.setItem("characterData", JSON.stringify(character));
 
   // ✅ 跳轉到結果頁
   window.location.href = "character.html";
