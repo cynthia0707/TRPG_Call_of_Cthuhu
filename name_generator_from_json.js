@@ -85,3 +85,7 @@ function getRandomCharacterName(birthplace, gender) {
 
   return isWestern ? `${name}·${surname}` : `${surname}${name}`;
 }
+const place = nameData[birthplace] || nameData["美國"];
+if (!place.surnames || !place[genderKey]) {
+  return "無效名稱";
+}
