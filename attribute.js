@@ -48,74 +48,61 @@ function getWeightedRandomAge() {
   ];
   return pool[Math.floor(Math.random() * pool.length)];
 }
-// 教育增強檢定
-function applyEduCheck(currentEdu, times) {
-  let result = currentEdu;
-  for (let i = 0; i < times; i++) {
-    const check = rollDice(1, 100);
-    if (check > result) {
-      result += rollDice(1, 10);
-      if (result > 99) result = 99;
-    }
-  }
-  return result;
+  //年齡調整
 }
-
-// 年齡調整處理
 function applyAgeAdjustment(character) {
-  const age = character.age;
+  const age = parseInt(character.age);
   const attr = character.attributes;
+  let eduTests = 0;
 
-  if (age < 20) {
+  if (age >= 15 && age <= 19) {
+    reduceRandomTotal(["STR", "SIZ"], 5, attr);
     attr.EDU -= 5;
-    let total = attr.STR + attr.SIZ;
-    if (total > 5) {
-      if (attr.STR >= 3) attr.STR -= 3;
-      else attr.STR = Math.max(1, attr.STR - 2);
-      attr.SIZ = Math.max(1, attr.SIZ - (5 - (attr.STR || 0)));
-    }
-    const luck1 = rollDice(3, 6, 0, 5);
-    const luck2 = rollDice(3, 6, 0, 5);
-    attr.LUCK = Math.max(luck1, luck2);
-  } else if (age < 40) {
-    attr.EDU = applyEduCheck(attr.EDU, 1);
-  } else if (age < 50) {
-    attr.EDU = applyEduCheck(attr.EDU, 2);
-    const loss = 5;
-    attr.STR -= 2;
-    attr.CON -= 2;
-    attr.DEX -= 1;
+    attr.LUCK = Math.max(
+      rollDice(3, 6, 0, 5),
+      rollDice(3, 6, 0, 5)
+    );
+  } else if (age <= 39) {
+    eduTests = 1;
+  } else if (age <= 49) {
+    eduTests = 2;
+    reduceRandomTotal(["STR", "CON", "DEX"], 5, attr);
     attr.APP -= 5;
-  } else if (age < 60) {
-    attr.EDU = applyEduCheck(attr.EDU, 3);
-    attr.STR -= 4;
-    attr.CON -= 3;
-    attr.DEX -= 3;
+  } else if (age <= 59) {
+    eduTests = 3;
+    reduceRandomTotal(["STR", "CON", "DEX"], 10, attr);
     attr.APP -= 10;
-  } else if (age < 70) {
-    attr.EDU = applyEduCheck(attr.EDU, 4);
-    attr.STR -= 7;
-    attr.CON -= 7;
-    attr.DEX -= 6;
+  } else if (age <= 69) {
+    eduTests = 4;
+    reduceRandomTotal(["STR", "CON", "DEX"], 20, attr);
     attr.APP -= 15;
-  } else if (age < 80) {
-    attr.EDU = applyEduCheck(attr.EDU, 4);
-    attr.STR -= 15;
-    attr.CON -= 15;
-    attr.DEX -= 10;
+  } else if (age <= 79) {
+    eduTests = 4;
+    reduceRandomTotal(["STR", "CON", "DEX"], 40, attr);
     attr.APP -= 20;
-  } else {
-    attr.EDU = applyEduCheck(attr.EDU, 4);
-    attr.STR -= 40;
-    attr.CON -= 30;
-    attr.DEX -= 10;
+  } else if (age <= 89) {
+    eduTests = 4;
+    reduceRandomTotal(["STR", "CON", "DEX"], 80, attr);
     attr.APP -= 25;
   }
 
-  // 不讓屬性變負數
-  for (let key in attr) {
-    if (attr[key] < 0) attr[key] = 0;
+  // 教育增強檢定
+  for (let i = 0; i < eduTests; i++) {
+    const roll = Math.floor(Math.random() * 100) + 1;
+    if (roll > attr.EDU) {
+      attr.EDU += Math.floor(Math.random() * 10) + 1;
+      attr.EDU = Math.min(attr.EDU, 99);
+    }
   }
+
+  // 最低值為 1，避免為負
+  for (const key in attr) {
+    if (attr[key] < 1) attr[key] = 1;
+  }
+}
+
+function getRandomBetween(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 // 主要功能：產生角色並跳轉
