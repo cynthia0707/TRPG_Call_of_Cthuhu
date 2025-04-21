@@ -34,7 +34,6 @@ function validateAgeInput(ageInput) {
   return age;
 }
 
-// 加權隨機年齡（減少極端值）
 //非線性隨機年齡
 function getWeightedRandomAge() {
   const pool = [
@@ -49,7 +48,7 @@ function getWeightedRandomAge() {
   return pool[Math.floor(Math.random() * pool.length)];
 }
   //年齡調整
-}
+
 function applyAgeAdjustment(character) {
   const age = parseInt(character.age);
   const attr = character.attributes;
@@ -138,7 +137,7 @@ function generateCharacter() {
     era,
     attributes
   };
-
+console.log("角色產生器載入完成");
   applyAgeAdjustment(character);
 
   localStorage.setItem("characterData", JSON.stringify(character));
