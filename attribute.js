@@ -34,7 +34,7 @@ function validateAgeInput(ageInput) {
   return age;
 }
 
-//非線性隨機年齡
+// 非線性隨機年齡
 function getWeightedRandomAge() {
   const pool = [
     ...Array(10).fill().map(() => getRandomBetween(20, 30)),
@@ -47,8 +47,12 @@ function getWeightedRandomAge() {
   ];
   return pool[Math.floor(Math.random() * pool.length)];
 }
-  //年齡調整
 
+function getRandomBetween(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// 年齡調整
 function applyAgeAdjustment(character) {
   const age = parseInt(character.age);
   const attr = character.attributes;
@@ -57,10 +61,7 @@ function applyAgeAdjustment(character) {
   if (age >= 15 && age <= 19) {
     reduceRandomTotal(["STR", "SIZ"], 5, attr);
     attr.EDU -= 5;
-    attr.LUCK = Math.max(
-      rollDice(3, 6, 0, 5),
-      rollDice(3, 6, 0, 5)
-    );
+    attr.LUCK = Math.max(rollDice(3, 6, 0, 5), rollDice(3, 6, 0, 5));
   } else if (age <= 39) {
     eduTests = 1;
   } else if (age <= 49) {
@@ -85,7 +86,6 @@ function applyAgeAdjustment(character) {
     attr.APP -= 25;
   }
 
-  // 教育增強檢定
   for (let i = 0; i < eduTests; i++) {
     const roll = Math.floor(Math.random() * 100) + 1;
     if (roll > attr.EDU) {
@@ -94,26 +94,33 @@ function applyAgeAdjustment(character) {
     }
   }
 
-  // 最低值為 1，避免為負
   for (const key in attr) {
     if (attr[key] < 1) attr[key] = 1;
   }
 }
 
-function getRandomBetween(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+// 扣點分配工具（分散扣點）
+function reduceRandomTotal(keys, total, attr) {
+  while (total > 0) {
+    const key = keys[Math.floor(Math.random() * keys.length)];
+    if (attr[key] > 1) {
+      attr[key]--;
+      total--;
+    }
+  }
 }
 
-// 主要功能：產生角色並跳轉
+// ✅ 主要功能：產生角色並跳轉
 function generateCharacter() {
-  const name = document.getElementById("charName").value || "無名氏";
-  const ageInput = document.getElementById("charAge").value;
-  let age = validateAgeInput(ageInput);
-  if (age === null) age = getWeightedRandomAge();
-
+  const nameInput = document.getElementById("charName").value;
   const gender = getRandomOption("charGender");
-  const location = getRandomOption("charLocation");
   const birthplace = getRandomOption("charBirthplace");
+  const name = nameInput || getRandomCharacterName(birthplace, gender);
+
+  const ageInput = document.getElementById("charAge").value;
+  const age = validateAgeInput(ageInput) || getWeightedRandomAge();
+
+  const location = getRandomOption("charLocation");
   const era = document.getElementById("charEra").value || "1920";
 
   const attributes = {
@@ -137,9 +144,8 @@ function generateCharacter() {
     era,
     attributes
   };
-console.log("角色產生器載入完成");
-  applyAgeAdjustment(character);
 
+  applyAgeAdjustment(character);
   localStorage.setItem("characterData", JSON.stringify(character));
   window.location.href = "character.html";
 }
